@@ -7967,7 +7967,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 .setRounding(8);
         botStartHint.setText(LocaleController.getString(R.string.BotStartTooltip));
         botStartHint.setMaxWidthPx(HintView2.cutInFancyHalf(botStartHint.getText(), botStartHint.getTextPaint()));
-        contentView.addView(botStartHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.FILL_HORIZONTAL, 16, 0, 16, 150));
+        contentView.addView(botStartHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.FILL_HORIZONTAL, 16, 0, 16, 160));
 
         if (currentUser != null && currentUser.bot && currentUser.id != UserObject.VERIFY && !UserObject.isDeleted(currentUser) && !UserObject.isReplyUser(currentUser) && !isInScheduleMode() && chatMode != MODE_PINNED && chatMode != MODE_SAVED && !isReport()) {
             bottomOverlayStartButton.setVisibility(View.VISIBLE);
