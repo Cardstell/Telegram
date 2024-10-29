@@ -410,6 +410,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private HintView2 groupEmojiPackHint;
     private HintView2 botMessageHint;
     private HintView2 factCheckHint;
+    private HintView2 botStartHint;
 
     private int reactionsMentionCount;
     private FrameLayout reactionsMentiondownButton;
@@ -3295,6 +3296,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         timerHintView = null;
         videoPlayerContainer = null;
         voiceHintTextView = null;
+        botStartHint = null;
         blurredView = null;
         dummyMessageCell = null;
         cantDeleteMessagesCount = 0;
@@ -7956,9 +7958,21 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         bottomOverlayStartButton.setOnClickListener(v -> bottomOverlayChatText.callOnClick());
         bottomOverlayChat.addView(bottomOverlayStartButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER, 8, 8, 8, 8));
 
+        botStartHint = new HintView2(context, HintView2.DIRECTION_BOTTOM)
+                .setIcon(ContextCompat.getDrawable(contentView.getContext(), R.drawable.ic_double_arrow))
+                .setIconTranslate(dp(4), dp(-1))
+                .setTextAlign(Layout.Alignment.ALIGN_CENTER)
+                .setHideByTouch(true)
+                .useScale(true)
+                .setRounding(8);
+        botStartHint.setText(LocaleController.getString(R.string.BotStartTooltip));
+        botStartHint.setMaxWidthPx(HintView2.cutInFancyHalf(botStartHint.getText(), botStartHint.getTextPaint()));
+        contentView.addView(botStartHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.FILL_HORIZONTAL, 16, 0, 16, 150));
+
         if (currentUser != null && currentUser.bot && currentUser.id != UserObject.VERIFY && !UserObject.isDeleted(currentUser) && !UserObject.isReplyUser(currentUser) && !isInScheduleMode() && chatMode != MODE_PINNED && chatMode != MODE_SAVED && !isReport()) {
             bottomOverlayStartButton.setVisibility(View.VISIBLE);
             bottomOverlayChat.setVisibility(View.VISIBLE);
+            botStartHint.show();
         }
 
         bottomOverlayLinksText = new LinkSpanDrawable.LinksTextView(context, themeDelegate);
@@ -25178,6 +25192,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (userBlocked) {
                 if (bottomOverlayStartButton != null) {
                     bottomOverlayStartButton.setVisibility(View.GONE);
+                }
+                if (botStartHint != null) {
+                    botStartHint.hide();
                 }
                 if (currentUser.bot) {
                     bottomOverlayChatText.setText(LocaleController.getString(R.string.BotUnblock));

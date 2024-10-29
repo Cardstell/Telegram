@@ -96,8 +96,15 @@ public class LinkActionView extends LinearLayout {
         int containerPadding = 4;
         frameLayout.addView(linkView);
         optionsView = new ImageView(context);
-        optionsView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ab_other));
-        optionsView.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
+
+        if (showOptionsButton()) {
+            optionsView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_ab_other));
+            optionsView.setContentDescription(LocaleController.getString(R.string.AccDescrMoreOptions));
+        } else {
+            optionsView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.msg_qrcode));
+            optionsView.setContentDescription(LocaleController.getString(R.string.GetQRCode));
+        }
+
         optionsView.setScaleType(ImageView.ScaleType.CENTER);
         frameLayout.addView(optionsView, LayoutHelper.createFrame(40, 48, Gravity.RIGHT | Gravity.CENTER_VERTICAL));
         addView(frameLayout, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, containerPadding, 0, containerPadding, 0));
@@ -219,6 +226,9 @@ public class LinkActionView extends LinearLayout {
         });
 
         optionsView.setOnClickListener(view -> {
+            if (!showOptionsButton()) {
+                showQrCode();
+            }
             if (actionBarPopupWindow != null) {
                 return;
             }
@@ -456,7 +466,11 @@ public class LinkActionView extends LinearLayout {
         if (hideRevokeOption != b) {
             hideRevokeOption = b;
             optionsView.setVisibility(View.VISIBLE);
-            optionsView.setImageDrawable(ContextCompat.getDrawable(optionsView.getContext(), R.drawable.ic_ab_other));
+            if (showOptionsButton()) {
+                optionsView.setImageDrawable(ContextCompat.getDrawable(optionsView.getContext(), R.drawable.ic_ab_other));
+            } else {
+                optionsView.setImageDrawable(ContextCompat.getDrawable(optionsView.getContext(), R.drawable.msg_qrcode));
+            }
         }
     }
 
@@ -616,5 +630,9 @@ public class LinkActionView extends LinearLayout {
 
     public void setCanEdit(boolean canEdit) {
         this.canEdit = canEdit;
+    }
+
+    private boolean showOptionsButton() {
+        return (!this.permanent && canEdit) || !hideRevokeOption;
     }
 }
